@@ -1,4 +1,4 @@
-import { Cat } from "./../../models/cat.model";
+import { Cat } from "./../../App/models/cat.model";
 
 const URL: string = "https://api.thecatapi.com/v1/images/search?limit=5&api_key=707899fb-0e66-4594-a01a-e6f5879e0d8b";
 const images: HTMLCollectionOf<Element> = document.getElementsByClassName("catImage");

@@ -1,138 +1,92 @@
-import { Cat } from "./../models/cat.model";
-import { RequestFailed } from "./../models/request.failed.model";
-import { FavoriteCat } from "./../models/favorite.cat.model";
+import { Cat } from "./models/cat.model";
+import { FavoriteCat } from "./models/favorite.model";
+import { CatService } from "./services/cat.service";
+import { HandleEvents, HandleDom } from "./view/main";
 
 export class LoadCatImage {
   constructor (
-    private readonly apiKey: string,
-    private readonly apiUrlRandom: string,
-    private readonly apiUrlFavorites: string,
-    private readonly elementImages: HTMLCollectionOf<Element>,
-    private readonly spanError: HTMLElement | null,
-    private readonly saveFavorite1: HTMLElement | null,
-    private readonly saveFavorite2: HTMLElement | null,
+    private readonly catService: CatService,
+    public domHandlers: [HandleEvents, HandleDom],
   ) {
-    this.randomImages = this.randomImages.bind(this);
-    this.saveOnFavorites = this.saveOnFavorites.bind(this);
-    this.favoriteImages = this.favoriteImages.bind(this);
-    this.deleteFavoriteImage = this.deleteFavoriteImage.bind(this);
+    this._initDom();
   }
 
-  private handleEventSaveButtons (favorites: Cat[]): void {
-    if (this.saveFavorite1 !== null && this.saveFavorite2 !== null) {
-      this.saveFavorite1.onclick = () => this.saveOnFavorites(favorites[0]);
-      this.saveFavorite2.onclick = () => this.saveOnFavorites(favorites[1]);
+  private _initDom = (): void => {
+    this.domHandlers.forEach(handler => {
+      handler.run(this);
+    })
+  }
+
+  run = (): void => {
+    this.showRandom();
+    this.showFavorites();
+  }
+
+  private showFavorites = async (): Promise<void> => {
+    try {
+      const isFavoritePath = true;
+      const data: FavoriteCat[] = await this.catService.getAll(isFavoritePath);
+
+      this.domHandlers[1].favoriteImages(data);
+    } catch (error) {
+      const stringError = error as string;
+
+      this.domHandlers[1].catchError(stringError);
     }
   }
 
-  private handleEventDeleteFavoriteButtons (button: HTMLElement, data: FavoriteCat) {
-      button.onclick = () => this.deleteFavoriteImage(data);
-  }
+  showRandom = async (): Promise<void> => {
+    try {
+      const isFavoritePath = false;
+      const cats: Cat[] = await this.catService.getAll(isFavoritePath);
+      const catIds: string[] = cats.map(cat => cat.id);
 
-  private favoriteImagesDom (data: FavoriteCat[]): void {
-    const section: HTMLElement | null = document.getElementById("favoriteCats");
-    const title: HTMLElement = document.createElement("h2");
-    const titleText: Text = document.createTextNode("Favorite cats");
-
-    if(section !== null){
-      section.innerText = "";
-    }
-
-    title.appendChild(titleText);
-    section?.appendChild(title);
-
-
-    data.forEach(cat => {
-      const article: HTMLElement = document.createElement("article");
-      const imageElement: HTMLElement = document.createElement("img");
-      const button: HTMLElement = document.createElement("button");
-      const image: HTMLImageElement = imageElement as HTMLImageElement;
-      const buttonText: Text = document.createTextNode("Get out cat picture from favorites");
-      button.appendChild(buttonText); //Se le agrega un texto al botón
-
-
-      article.appendChild(image);
-      article.appendChild(button);
-
-      section?.appendChild(article);
-
-      console.log(article);
-
-      image.src = cat.image.url;
-      image.width = 150;
-
-      this.handleEventDeleteFavoriteButtons(button, cat);
-    });
-  }
-
-  async favoriteImages (): Promise<void> {
-    const res: Response | null = await fetch(`${this.apiUrlFavorites}?${this.apiKey}`);
-
-    if (res.status === 200) {
-      const data: FavoriteCat[]= await res.json();
-      this.favoriteImagesDom(data);
-
-    } else {
-      this.catchError(res);
-    }
-  }
-
-  async randomImages ():Promise<void> {
-    const res: Response | null = await fetch(this.apiUrlRandom);
-
-    if (res.status === 200) {
-      const cats: Cat[]= await res.json();
-      this.handleEventSaveButtons(cats);
+      this.domHandlers[0].saveButtons(catIds);
       cats.forEach((cat, index) => {
-        const image = this.elementImages[index] as HTMLImageElement;
-
-        image.src = cat.url;
+        this.domHandlers[1].createRandomImage(cat, index);
       });
-    } else {
-      this.catchError(res);
+    } catch (error) {
+      const stringError = error as string;
+
+      this.domHandlers[1].catchError(stringError);
     }
   }
 
-  async saveOnFavorites (favorite: Cat): Promise<void> {
-    let idImage: string = favorite.id;
+  saveOnFavorites = async (catId: string): Promise<void> => {
+    try {
+      const data = await this.catService.post(catId);
 
-    const res: Response | null = await fetch(`${this.apiUrlFavorites}?${this.apiKey}`, { //Cuando se quiere hacer una peticion
-        //con fetch que no sea get se debe colocar las indicaciones de la peticion.
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json" //Lo indica la api.
-      },
-      body: JSON.stringify({
-        image_id: idImage
-      })
-    });
+      this.addFavorite(data.id);
+    } catch (error) {
+      const stringError = error as string;
 
-    if (res.status === 200) {
-      this.favoriteImages()
-    } else {
-      this.catchError(res);
+      this.domHandlers[1].catchError(stringError);
     }
   }
 
-  async deleteFavoriteImage (favorite: FavoriteCat) {
-    let idImage: string = favorite.id.toString();
-    const requestPath: string = `${this.apiUrlFavorites}/${idImage}?api_key=707899fb-0e66-4594-a01a-e6f5879e0d8b`;
-    const res: Response | null = await fetch(requestPath, { //Cuando se quiere hacer una peticion
-        //con fetch que no sea get se debe colocar las indicaciones de la peticion.
-      method: "DELETE",
-    });
+  private addFavorite = async (catId: number): Promise<void> => {
+    try {
+      const cat: FavoriteCat = await this.catService.getOne(catId);
+      const {div, button, id} = this.domHandlers[1].createElementFavoriteImage(cat);
 
-    if (res.status === 200) {
-      this.favoriteImages();
-    } else {
-      this.catchError(res);
+      this.domHandlers[0].deleteFavoriteBack(button, id);
+      this.domHandlers[0].deleteFavoriteFront(div);
+      this.domHandlers[1].addFavoriteElementView(div);
+    } catch (error) {
+      const stringError = error as string;
+
+      this.domHandlers[1].catchError(stringError);
     }
   }
 
-  private async catchError(res: Response | null): Promise<void> {
-    if (this.spanError !== null && res !== null) {
-      const dataError: RequestFailed = await res.json();
-      this.spanError.innerText = `Something went wrong. Error ${dataError.status}. ${dataError.message}`;
+  deleteFavorite = async (catId: number): Promise<void> => {
+    try {
+      await this.catService.delete(catId);
+
+    } catch (error) {
+      const stringError = error as string;
+
+      this.domHandlers[1].catchError(stringError);
     }
   }
 }

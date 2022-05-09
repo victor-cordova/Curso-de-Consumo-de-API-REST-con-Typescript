@@ -1,4 +1,4 @@
-import { Cat } from "./../../models/cat.model";
+import { Cat } from "./../../App/models/cat.model";
 
 (async () => {
   console.log("Hello world.");

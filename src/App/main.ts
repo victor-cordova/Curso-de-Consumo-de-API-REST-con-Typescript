@@ -1,21 +1,24 @@
-import { LoadCatImage } from "./LoadCatImage";
 import { CatService } from "./services/cat.service";
-import { HandleEvents, HandleDom } from "./view/main";
+import { HandleDom } from "./view/handleDom";
+import { HandleEvents } from "./view/handleEvents";
+import { LoadCatImage } from "./loadCatImage";
+import
 
+const API_KEY: string = "707899fb-0e66-4594-a01a-e6f5879e0d8b";
 const API_URL_FAVORITES: string = "https://api.thecatapi.com/v1/favourites";
 const API_URL_RANDOM: string = "https://api.thecatapi.com/v1/images/search?limit=2&api_key=707899fb-0e66-4594-a01a-e6f5879e0d8b";
 const API_URL_UPLOAD: string = "https://api.thecatapi.com/v1/images/upload";
-const API_KEY: string = "707899fb-0e66-4594-a01a-e6f5879e0d8b";
 
-const images: HTMLCollectionOf<Element> = document.getElementsByClassName("catImage");
-const thumbnailImage: HTMLElement | null = document.getElementById("thumbnailImage");
-const updateImagesButton: HTMLElement | null = document.getElementById("updateImagesButton");
-const saveOnFavoritesButtons: HTMLCollectionOf<Element> = document.getElementsByClassName("saveButton");
 const containerFavoriteImages: HTMLElement | null = document.getElementById("containerImages");
-const spanError: HTMLElement | null = document.getElementById("errorMessage");
 const form: HTMLElement | null = document.getElementById("uploadForm");
 const input: HTMLElement | null = document.getElementById("file");
-const uploadButton = document.getElementById("uploadButton");
+const spanError: HTMLElement | null = document.getElementById("errorMessage");
+const thumbnailImage: HTMLElement | null = document.getElementById("thumbnailImage");
+const updateImagesButton: HTMLElement | null = document.getElementById("updateImagesButton");
+const uploadButton: HTMLElement | null = document.getElementById("uploadButton");
+
+const images: HTMLCollectionOf<Element> = document.getElementsByClassName("catImage");
+const saveOnFavoritesButtons: HTMLCollectionOf<Element> = document.getElementsByClassName("saveButton");
 
 const reader = new FileReader();
 

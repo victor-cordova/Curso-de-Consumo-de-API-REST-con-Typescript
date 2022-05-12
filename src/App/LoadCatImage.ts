@@ -1,16 +1,15 @@
 import { Cat } from "./models/cat.model";
 import { FavoriteCat } from "./models/favorite.model";
 import { CatService } from "./services/cat.service";
-import { HandleEvents, HandleDom } from "./view/main";
+import { HandleEvents } from "./view/handleEvents";
+import { HandleDom } from "./view/handleDom";
 
 export class LoadCatImage {
   constructor (
     private readonly catService: CatService,
-    public domHandlers: [HandleEvents, HandleDom],
-    public reader: FileReader,
-  ) {
-    this._initDom();
-  }
+    public readonly domHandlers: [HandleEvents, HandleDom],
+    public readonly reader: FileReader,
+  ) {}
 
   private _initDom = (): void => {
     this.domHandlers.forEach(handler => {
@@ -19,17 +18,15 @@ export class LoadCatImage {
   }
 
   run = (): void => {
+    this._initDom();
     this.showRandom();
     this.showFavorites();
   }
 
-  uploadImage = async () => {
+  deleteFavorite = async (catId: number): Promise<void> => {
     try {
-      const form: FormData | undefined= this.domHandlers[0].formData;
+      await this.catService.delete(catId);
 
-      if (form) {
-        await this.catService.postImage(form);
-      }
     } catch (error) {
       const stringError = error as string;
 
@@ -37,12 +34,11 @@ export class LoadCatImage {
     }
   }
 
-  private showFavorites = async (): Promise<void> => {
+  saveOnFavorites = async (catId: string): Promise<void> => {
     try {
-      const isFavoritePath = true;
-      const data: FavoriteCat[] = await this.catService.getAll(isFavoritePath);
+      const data = await this.catService.postFavorite(catId);
 
-      this.domHandlers[1].favoriteImages(data);
+      this.addFavorite(data.id);
     } catch (error) {
       const stringError = error as string;
 
@@ -67,17 +63,20 @@ export class LoadCatImage {
     }
   }
 
-  saveOnFavorites = async (catId: string): Promise<void> => {
+  uploadImage = async () => {
     try {
-      const data = await this.catService.postFavorite(catId);
+      const form: FormData | undefined= this.domHandlers[0].formData;
 
-      this.addFavorite(data.id);
+      if (form) {
+        await this.catService.postImage(form);
+      }
     } catch (error) {
       const stringError = error as string;
 
       this.domHandlers[1].catchError(stringError);
     }
   }
+
 
   private addFavorite = async (catId: number): Promise<void> => {
     try {
@@ -94,10 +93,12 @@ export class LoadCatImage {
     }
   }
 
-  deleteFavorite = async (catId: number): Promise<void> => {
+  private showFavorites = async (): Promise<void> => {
     try {
-      await this.catService.delete(catId);
+      const isFavoritePath = true;
+      const data: FavoriteCat[] = await this.catService.getAll(isFavoritePath);
 
+      this.domHandlers[1].favoriteImages(data);
     } catch (error) {
       const stringError = error as string;
 

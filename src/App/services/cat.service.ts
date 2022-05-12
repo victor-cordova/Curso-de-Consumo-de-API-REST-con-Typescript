@@ -1,5 +1,5 @@
-import { RequestFailed } from "../models/request-failed.model";
 import { FavoriteCat } from "../models/favorite.model";
+import { RequestFailed } from "../models/request-failed.model";
 import { RequestPostFavorite } from "../models/request-post.favorite";
 
 export class CatService {
@@ -10,6 +10,25 @@ export class CatService {
     private readonly randomPath: string,
     private readonly uploadPath: string,
   ){}
+
+  delete = async (catId: number): Promise<void>=> {
+    const requestPath: string = `${this.favoritePath}/${catId}`;
+    const res: Response | null = await fetch(requestPath, {
+      method: "DELETE",
+      headers: {
+        "X-API-KEY": this.apiKey,
+      }
+    });
+
+    if (res.status === 200) {
+      const data = await res.json();
+
+      return data;
+    }
+    const data: RequestFailed = await res.json();
+
+    throw Error(`Error ${data.status}. ${data.message}`);
+  }
 
   getAll = async (isFavoritePath: boolean): Promise<any[]> => {
     const requestPath: string = isFavoritePath? this.favoritePath : this.randomPath;
@@ -47,6 +66,24 @@ export class CatService {
     throw Error(`Error ${data.status}. ${data.message}`);
   }
 
+  postImage = async (formData: FormData) => {
+    const res = await fetch(this.uploadPath, {
+      method: "POST",
+      headers: {
+        "X-API-KEY": this.apiKey,
+      },
+      body: formData,
+    })
+
+    if (res.status === 201) {
+      const data = await res.json();
+
+      return data;
+    }
+    const data: RequestFailed = await res.json();
+    throw Error(`Error ${data.status}. ${data.message}`);
+  }
+
   postFavorite = async (catId: string): Promise<RequestPostFavorite> => {
     const res: Response = await fetch(this.favoritePath, {
       method: "POST",
@@ -62,43 +99,6 @@ export class CatService {
 
     if (res.status === 200) {
       const data: RequestPostFavorite = await res.json();
-
-      return data;
-    }
-    const data: RequestFailed = await res.json();
-    throw Error(`Error ${data.status}. ${data.message}`);
-  }
-
-  delete = async (catId: number): Promise<void>=> {
-    const requestPath: string = `${this.favoritePath}/${catId}`;
-    const res: Response | null = await fetch(requestPath, {
-      method: "DELETE",
-      headers: {
-        "X-API-KEY": this.apiKey,
-      }
-    });
-
-    if (res.status === 200) {
-      const data = await res.json();
-
-      return data;
-    }
-    const data: RequestFailed = await res.json();
-
-    throw Error(`Error ${data.status}. ${data.message}`);
-  }
-
-  postImage = async (formData: FormData) => {
-    const res = await fetch(this.uploadPath, {
-      method: "POST",
-      headers: {
-        "X-API-KEY": this.apiKey,
-      },
-      body: formData,
-    })
-
-    if (res.status === 201) {
-      const data = await res.json();
 
       return data;
     }

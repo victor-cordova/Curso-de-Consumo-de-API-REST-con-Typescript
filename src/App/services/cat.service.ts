@@ -8,16 +8,22 @@ export class CatService {
     private readonly apiKey: string,
     private readonly favoritePath: string,
     private readonly randomPath: string,
+    private readonly uploadPath: string,
   ){}
 
   getAll = async (isFavoritePath: boolean): Promise<any[]> => {
+    const requestPath: string = isFavoritePath? this.favoritePath : this.randomPath;
 
-    const requestPath: string = isFavoritePath? `${this.favoritePath}?${this.apiKey}` : this.randomPath;
-    // const requestPath: string = path;
-    const res: Response = await fetch(requestPath);
+    const res: Response = await fetch(requestPath, {
+      headers: {
+        "X-API-KEY": this.apiKey, //Ahora se coloca el api key como header, en vez de
+        //query parameter.
+      }
+    });
 
     if (res.status === 200) {
       const data = await res.json();
+
       return data;
     }
     const data: RequestFailed = await res.json();
@@ -26,8 +32,12 @@ export class CatService {
   }
 
   getOne = async (catId: number): Promise<FavoriteCat> => {
-    const requestPath: string = `${this.favoritePath}/${catId}?${this.apiKey}`;
-    const res: Response = await fetch(requestPath);
+    const requestPath: string = `${this.favoritePath}/${catId}`;
+    const res: Response = await fetch(requestPath, {
+      headers: {
+        "X-API-KEY": this.apiKey,
+      }
+    });
     if (res.status === 200) {
       const data: FavoriteCat= await res.json();
 
@@ -37,14 +47,15 @@ export class CatService {
     throw Error(`Error ${data.status}. ${data.message}`);
   }
 
-  post = async (catId: string): Promise<RequestPostFavorite> => {
-    const requestPath: string = `${this.favoritePath}?${this.apiKey}`;
-    const res: Response = await fetch(requestPath, {
+  postFavorite = async (catId: string): Promise<RequestPostFavorite> => {
+    const res: Response = await fetch(this.favoritePath, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json", //Se coloca application/json para indicar que
+        //recibirá un formato tipo json, porque es lcomo acepta la api.
+        "X-API-KEY": this.apiKey,
       },
-      body: JSON.stringify({
+      body: JSON.stringify({ //Se pasa de objeto js a uno de tipo json.
         image_id: catId
       })
     });
@@ -59,9 +70,12 @@ export class CatService {
   }
 
   delete = async (catId: number): Promise<void>=> {
-    const requestPath: string = `${this.favoritePath}/${catId}?${this.apiKey}`;
+    const requestPath: string = `${this.favoritePath}/${catId}`;
     const res: Response | null = await fetch(requestPath, {
       method: "DELETE",
+      headers: {
+        "X-API-KEY": this.apiKey,
+      }
     });
 
     if (res.status === 200) {
@@ -71,6 +85,24 @@ export class CatService {
     }
     const data: RequestFailed = await res.json();
 
+    throw Error(`Error ${data.status}. ${data.message}`);
+  }
+
+  postImage = async (formData: FormData) => {
+    const res = await fetch(this.uploadPath, {
+      method: "POST",
+      headers: {
+        "X-API-KEY": this.apiKey,
+      },
+      body: formData,
+    })
+
+    if (res.status === 201) {
+      const data = await res.json();
+
+      return data;
+    }
+    const data: RequestFailed = await res.json();
     throw Error(`Error ${data.status}. ${data.message}`);
   }
 }

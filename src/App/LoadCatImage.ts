@@ -7,6 +7,7 @@ export class LoadCatImage {
   constructor (
     private readonly catService: CatService,
     public domHandlers: [HandleEvents, HandleDom],
+    public reader: FileReader,
   ) {
     this._initDom();
   }
@@ -20,6 +21,20 @@ export class LoadCatImage {
   run = (): void => {
     this.showRandom();
     this.showFavorites();
+  }
+
+  uploadImage = async () => {
+    try {
+      const form: FormData | undefined= this.domHandlers[0].formData;
+
+      if (form) {
+        await this.catService.postImage(form);
+      }
+    } catch (error) {
+      const stringError = error as string;
+
+      this.domHandlers[1].catchError(stringError);
+    }
   }
 
   private showFavorites = async (): Promise<void> => {
@@ -54,7 +69,7 @@ export class LoadCatImage {
 
   saveOnFavorites = async (catId: string): Promise<void> => {
     try {
-      const data = await this.catService.post(catId);
+      const data = await this.catService.postFavorite(catId);
 
       this.addFavorite(data.id);
     } catch (error) {

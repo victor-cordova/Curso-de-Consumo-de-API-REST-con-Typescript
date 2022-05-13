@@ -7,7 +7,6 @@ export class HandleEvents {
     private readonly uploadImageButton: HTMLElement | null,
     private readonly inputElement: HTMLElement | null,
     private loadCat?: LoadCatImage,
-    public formData?: FormData,
   ){}
 
   run = (loadCat: LoadCatImage) => {
@@ -38,7 +37,7 @@ export class HandleEvents {
 
 
   private fillThumbnail = () => {
-    const file: FormDataEntryValue | null | undefined= this.formData?.get("file");
+    const file: FormDataEntryValue | null | undefined= this.loadCat?.formData?.get("file");
     const newFile = file as File;
 
     this.loadCat?.reader.readAsDataURL(newFile)
@@ -52,7 +51,9 @@ export class HandleEvents {
     input.addEventListener("input", () => {
       const newForm = this.loadCat?.domHandlers[1].form as HTMLFormElement;
 
-      this.formData = new FormData(newForm);
+      if (this.loadCat) {
+        this.loadCat.formData = new FormData(newForm);
+      }
       this.fillThumbnail();
     });
   }
@@ -60,6 +61,7 @@ export class HandleEvents {
   private updateRandomButton = () => {
     if (this.updateImagesButton!== null && this.loadCat!== undefined) {
       this.updateImagesButton.onclick = this.loadCat.showRandom;
+
     }
   }
 

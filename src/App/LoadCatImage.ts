@@ -1,14 +1,22 @@
 import { Cat } from "./models/cat.model";
 import { FavoriteCat } from "./models/favorite.model";
+import { RandomData } from "./models/random-data.model"
+
 import { CatService } from "./services/cat.service";
 import { HandleEvents } from "./view/handleEvents";
 import { HandleDom } from "./view/handleDom";
+import { LocalStorage } from "./localStorage";
+
 
 export class LoadCatImage {
   constructor (
     private readonly catService: CatService,
     public readonly domHandlers: [HandleEvents, HandleDom],
+    public readonly lStorage: LocalStorage,
     public readonly reader: FileReader,
+    public formData?: FormData,
+    private randomIds?: string[],
+    private randomUrlImages?: string[],
   ) {}
 
   private _initDom = (): void => {
@@ -17,10 +25,22 @@ export class LoadCatImage {
     })
   }
 
-  run = (): void => {
+  run = async (): Promise<void> => {
     this._initDom();
-    this.showRandom();
     this.showFavorites();
+    await this.checkLocalStorage();
+    await this.showRandom();
+  }
+
+  checkLocalStorage = async () => {
+    const localStorageData: RandomData | undefined = this.lStorage.getData();
+
+    if (localStorageData) {
+      this.randomIds = localStorageData.catIds;
+      this.randomUrlImages = localStorageData.urlImages;
+    } else {
+      await this.getRandomDataApi();
+    }
   }
 
   deleteFavorite = async (catId: number): Promise<void> => {
@@ -46,16 +66,38 @@ export class LoadCatImage {
     }
   }
 
-  showRandom = async (): Promise<void> => {
+  getRandomDataApi = async () => {
     try {
+
       const isFavoritePath = false;
       const cats: Cat[] = await this.catService.getAll(isFavoritePath);
       const catIds: string[] = cats.map(cat => cat.id);
+      const urlImages: string[] = cats.map(cat => cat.url);
 
-      this.domHandlers[0].saveButtons(catIds);
-      cats.forEach((cat, index) => {
-        this.domHandlers[1].createRandomImage(cat, index);
-      });
+      this.randomIds = catIds;
+      this.randomUrlImages = urlImages;
+    } catch (error) {
+      const stringError = error as string;
+
+      this.domHandlers[1].catchError(stringError);
+    }
+  }
+
+  showRandom = async (): Promise<void> => {
+    try {
+      if (this.randomIds && this.randomUrlImages) {
+        this.domHandlers[0].saveButtons(this.randomIds);
+        this.randomUrlImages.forEach((url, index) => {
+          this.domHandlers[1].createRandomImage(url, index);
+        });
+      }
+      await this.getRandomDataApi();
+      if (this.randomIds && this.randomUrlImages) {
+        this.lStorage.updateData({
+          catIds: this.randomIds,
+          urlImages: this.randomUrlImages,
+        });
+      }
     } catch (error) {
       const stringError = error as string;
 
@@ -65,7 +107,7 @@ export class LoadCatImage {
 
   uploadImage = async () => {
     try {
-      const form: FormData | undefined= this.domHandlers[0].formData;
+      const form: FormData | undefined= this.formData;
 
       if (form) {
         await this.catService.postImage(form);

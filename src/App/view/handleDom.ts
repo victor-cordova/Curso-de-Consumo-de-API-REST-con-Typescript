@@ -1,7 +1,6 @@
 import { FavoriteCat } from "../models/favorite.model";
 import { LoadCatImage } from "./../loadCatImage";
 import { FavoriteElement } from "../models/favorite-element.model";
-import { Cat } from "../models/cat.model";
 
 export class HandleDom {
   constructor(
@@ -50,10 +49,10 @@ export class HandleDom {
     };
   }
 
-  createRandomImage = (cat: Cat, index: number) => {
+  createRandomImage = (urlImage: string, index: number) => {
     const image: HTMLImageElement = this.elementImages[index] as HTMLImageElement;
 
-    image.src = cat.url;
+    image.src = urlImage;
     image.width = 200;
     image.height = 200;
   }

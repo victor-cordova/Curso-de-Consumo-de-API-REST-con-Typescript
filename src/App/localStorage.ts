@@ -1,13 +1,14 @@
-import { RandomData } from "./models/random-data.model"
+// import { FavoriteCat } from "./models/favorite.model";
+// import { RandomData } from "./models/random-data.model"
 
 export class LocalStorage {
 
-  getData = () => {
-    const localStorageRandom: string | null = localStorage.getItem("random-images");
-    let localStorageRandomParsed: RandomData | undefined;
+  getData = (lsName: string) => {
+    const localStorageRandom: string | null = localStorage.getItem(lsName);
+    let localStorageRandomParsed;
 
     if (!localStorageRandom) {
-      localStorage.setItem("random-images", JSON.stringify([]));
+      localStorage.setItem(lsName, JSON.stringify([]));
       localStorageRandomParsed = undefined;
     }
     else {
@@ -16,9 +17,9 @@ export class LocalStorage {
     return localStorageRandomParsed;
   }
 
-  updateData = async (data: RandomData) => {
+  updateData = async (data: any, lsName: string) => {
     const dataStringified: string = JSON.stringify(data)
 
-    localStorage.setItem("random-images", dataStringified);
+    localStorage.setItem(lsName, dataStringified);
   }
 }

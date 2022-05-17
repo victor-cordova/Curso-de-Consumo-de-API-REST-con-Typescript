@@ -1,0 +1,9 @@
+.header {
+  width: 100vw;
+}
+
+.header__title {
+  text-align: center;
+  /* size: 5rem; */
+  font-size: 5rem;
+}

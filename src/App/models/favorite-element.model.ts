@@ -1,5 +1,5 @@
 export interface FavoriteElement {
-  div: HTMLElement,
+  picture: HTMLElement,
   button: HTMLElement,
   id: number,
 }

@@ -9,6 +9,7 @@ export class HandleDom {
     private readonly containerFavoriteImages: HTMLElement | null,
     public readonly form: HTMLElement | null,
     private readonly thumbnail: HTMLElement | null,
+    private readonly thumbnailText: HTMLElement | null,
     private loadCat?: LoadCatImage,
   ){}
 
@@ -27,43 +28,54 @@ export class HandleDom {
   }
 
   createElementFavoriteImage = (favoriteCat: FavoriteCat): FavoriteElement => {
-    const div: HTMLElement = document.createElement("div");
+    const picture: HTMLElement = document.createElement("picture");
     const imageElement: HTMLElement = document.createElement("img");
     const button: HTMLElement = document.createElement("button");
     const image: HTMLImageElement = imageElement as HTMLImageElement;
     const id: number = favoriteCat.id;
 
-    button.textContent = "Get out cat picture from favorites";
+    // button.textContent = "Get out cat picture from favorites";
+    // button.style.backgroundImage = "https://img.icons8.com/ios-glyphs/30/000000/cancel.png";
 
+    // image.style.backgroundImage = `url(${favoriteCat.image.url})`;
     image.src = favoriteCat.image.url;
-    image.width = 200;
-    image.height = 200;
 
-    div.className = "favoriteDiv";
+    button.className = "picture__favorite-button";
+    picture.className = "picture";
+    image.className = "picture__img";
 
-    div.append(image, button);
+    picture.append(image, button);
     return {
-      div,
+      picture,
       button,
       id,
     };
   }
 
   createRandomImage = (urlImage: string, index: number) => {
-    const image: HTMLImageElement = this.elementImages[index] as HTMLImageElement;
-
+    const image = this.elementImages[index] as HTMLImageElement;
+    // image.style.backgroundImage = `url(${urlImage})`;
+    // console.log(urlImage);
+    // class="catImage"
+    // image.style.backgroundImage = `url(${urlImage})`;
     image.src = urlImage;
-    image.width = 200;
-    image.height = 200;
+    // image.width = 200;
+    // image.height = 200;
   }
 
   createThumbnail = () => {
     const imageThumbnail = this.thumbnail as HTMLImageElement;
 
-    if (typeof(this.loadCat?.reader.result) === "string") {
+
+    if (typeof(this.loadCat?.reader.result) === "string" && this.thumbnailText) {
+      // imageThumbnail.style.backgroundImage = `url(${this.loadCat?.reader.result})`;
       imageThumbnail.src = this.loadCat?.reader.result;
-      imageThumbnail.width = 200;
-      imageThumbnail.height = 200;
+      imageThumbnail.classList.add("thumbnail__img--loaded");
+      // imageThumbnail.className =
+      this.thumbnailText.classList.add("thumbnail__text--hidden");
+      // imageThumbnail.className = ""
+      // imageThumbnail.width = 200;
+      // imageThumbnail.height = 200;
     }
   }
 
@@ -74,11 +86,11 @@ export class HandleDom {
     const elements: HTMLElement[] = [];
 
     favoriteCats.forEach(cat => {
-      const {div, button, id} = this.createElementFavoriteImage(cat);
+      const {picture, button, id} = this.createElementFavoriteImage(cat);
 
       this.loadCat?.domHandlers[0].deleteFavoriteBack(button, id);
-      this.loadCat?.domHandlers[0].deleteFavoriteFront(div);
-      elements.push(div);
+      this.loadCat?.domHandlers[0].deleteFavoriteFront(picture);
+      elements.push(picture);
     });
     this.containerFavoriteImages?.append(...elements);
   }

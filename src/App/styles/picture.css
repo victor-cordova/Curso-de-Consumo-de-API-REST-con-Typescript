@@ -1,0 +1,42 @@
+.picture {
+  display: flex;
+  position: relative;
+}
+
+.picture__img {
+  width: 200px;
+  height: 200px;
+
+  object-fit: cover;
+  border: 2px black solid;
+
+  border-radius: 7%;
+}
+
+.picture__favorite-button {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+
+  /* background-image: url("https://img.icons8.com/ios-filled/60/ff0000/hearts.png"); */
+  background-image: url("https://img.icons8.com/ios-filled/60/000000/hearts.png");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: center;
+
+  width: 35px;
+  height: 35px;
+
+  border: none;
+
+  background-color: rgba( 0, 0, 0, 0);
+}
+
+.picture__favorite-button:hover {
+  /* border: solid white 2px; */
+  background-image: url("https://img.icons8.com/ios-filled/60/ff0000/hearts.png");
+  transition: 250ms;
+  transform-origin: center;
+  transform: scale(1.2);
+}
+

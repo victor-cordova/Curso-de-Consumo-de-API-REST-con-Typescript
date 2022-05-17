@@ -1,0 +1,42 @@
+.thumbnail {
+  /* position: relative; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  width: 200px;
+  border: 2px black solid;
+  border-radius: 7%;
+  /* background-color: plum; */
+}
+
+.thumbnail__text {
+  /* position: absolute; */
+  /* width: 100%;
+  height: 100%; */
+  font-size: 1.5rem;
+}
+
+.thumbnail__text--hidden {
+  display: none;
+}
+
+.thumbnail__img {
+  /* background-image: url("https://img.icons8.com/pastel-glyph/64/000000/upload--v1.png"); */
+  /* image */
+  object-fit: cover;
+  /* background-repeat: no-repeat; */
+  /* background-size: 100%; */
+  background-position: center;
+  width: 64px;
+  height: 64px;
+}
+
+.thumbnail__img--loaded {
+  /* background-size: 100%; */
+  /* width: 100%;
+  height: auto; */
+  width: 200px;
+  height: 200px;
+}

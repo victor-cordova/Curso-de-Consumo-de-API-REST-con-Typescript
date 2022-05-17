@@ -13,6 +13,7 @@ export class LoadCatImage {
     private readonly catService: CatService,
     public readonly domHandlers: [HandleEvents, HandleDom],
     public readonly lStorage: LocalStorage,
+    private readonly lsNames: [string, string],
     public readonly reader: FileReader,
     public formData?: FormData,
     private randomIds?: string[],
@@ -27,13 +28,15 @@ export class LoadCatImage {
 
   run = async (): Promise<void> => {
     this._initDom();
+
     this.showFavorites();
-    await this.checkLocalStorage();
+    await this.checkAndSetDataByLS();
     await this.showRandom();
+    // await
   }
 
-  checkLocalStorage = async () => {
-    const localStorageData: RandomData | undefined = this.lStorage.getData();
+  checkAndSetDataByLS = async () => {
+    const localStorageData: RandomData | undefined = this.lStorage.getData(this.lsNames[1]);
 
     if (localStorageData) {
       this.randomIds = localStorageData.catIds;
@@ -96,7 +99,7 @@ export class LoadCatImage {
         this.lStorage.updateData({
           catIds: this.randomIds,
           urlImages: this.randomUrlImages,
-        });
+        }, this.lsNames[1]);
       }
     } catch (error) {
       const stringError = error as string;
@@ -122,11 +125,11 @@ export class LoadCatImage {
   private addFavorite = async (catId: number): Promise<void> => {
     try {
       const cat: FavoriteCat = await this.catService.getOne(catId);
-      const {div, button, id} = this.domHandlers[1].createElementFavoriteImage(cat);
+      const {picture, button, id} = this.domHandlers[1].createElementFavoriteImage(cat);
 
       this.domHandlers[0].deleteFavoriteBack(button, id);
-      this.domHandlers[0].deleteFavoriteFront(div);
-      this.domHandlers[1].addFavoriteElementView(div);
+      this.domHandlers[0].deleteFavoriteFront(picture);
+      this.domHandlers[1].addFavoriteElementView(picture);
     } catch (error) {
       const stringError = error as string;
 
@@ -136,14 +139,14 @@ export class LoadCatImage {
 
   private showFavorites = async (): Promise<void> => {
     try {
-      let localStorageDataFavorite: FavoriteCat[] | undefined = this.getLocalStorageFavorite();
+      // let localStorageDataFavorite: FavoriteCat[] | undefined = this.lStorage.getData(this.lsNames[0]);
 
-      if (!localStorageDataFavorite) {
+      // if (localStorageDataFavorite) {
         const isFavoritePath = true;
 
-        localStorageDataFavorite = await this.catService.getAll(isFavoritePath);
-        this.setLocalStorageFavorite(localStorageDataFavorite);
-      }
+        let localStorageDataFavorite: FavoriteCat[] = await this.catService.getAll(isFavoritePath);
+        // this.lStorage.updateData(localStorageDataFavorite, this.lsNames[0]);
+      // }
       this.domHandlers[1].favoriteImages(localStorageDataFavorite);
 
     } catch (error) {
@@ -151,25 +154,5 @@ export class LoadCatImage {
 
       this.domHandlers[1].catchError(stringError);
     }
-  }
-
-  setLocalStorageFavorite = (data: FavoriteCat[]) => {
-    const dataStringified: string = JSON.stringify(data)
-
-    localStorage.setItem("favorite-images", dataStringified);
-  }
-
-  getLocalStorageFavorite = () => {
-    const localStorageFavorite: string | null = localStorage.getItem("favorite-images");
-    let localStorageFavoriteParsed: FavoriteCat[] | undefined;
-
-    if (!localStorageFavorite) {
-      localStorage.setItem("favorite-images", JSON.stringify([]));
-      localStorageFavoriteParsed = undefined;
-    }
-    else {
-      localStorageFavoriteParsed = JSON.parse(localStorageFavorite);
-    }
-    return localStorageFavoriteParsed;
   }
 }

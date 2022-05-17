@@ -5,44 +5,59 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="./styles/button.css">
+  <link rel="stylesheet" href="./styles/header.css">
+  <link rel="stylesheet" href="./styles/picture.css">
+  <link rel="stylesheet" href="./styles/randomCats.css">
+  <link rel="stylesheet" href="./styles/thumbnail.css">
   <title>Cat app</title>
 </head>
 <body>
-  <h1>Cat app</h1>
+  <header class="header">
+    <h1 class="header__title">Cat app</h1>
+  </header>
+
 
   <span id="errorMessage"></span>
 
-  <section id="randomCats">
+  <section id="randomCats" class="random-cats">
 
-    <h2>Random cats</h2>
+    <h2 class="random-cats__title">Random cats</h2>
 
-    <article>
-      <img alt="Random cat picture" id="img1" class="catImage">
-      <button class="saveButton">Save cat on favorites</button>
-    </article>
+    <picture class="picture">
+      <img class="picture__img">
+      <button class="picture__favorite-button"></button>
+    </picture>
 
-    <article>
-      <img alt="Random cat picture" id="img2" class="catImage">
-      <button class="saveButton">Save cat on favorites</button>
-    </article>
+    <picture class="picture">
+      <img class="picture__img">
+      <button class="picture__favorite-button"></button>
+    </picture>
+
+    <button id="updateImagesButton" class="button">Update cat pictures</button>
   </section>
 
-  <button id="updateImagesButton">Update cat pictures</button>
+  <section id="uploadCat" class="upload-section">
+    <h2 class="upload-section__title">Upload your own Cat to the app.</h2>
 
-  <section id="uploadCat">
-    <h2>Upload your own Cat to the app.</h2>
+    <form id="uploadForm" class="form">
 
-    <form id="uploadForm">
-      <img width="150" alt="Cat Thumbnail" id="thumbnailImage">
-      <input type="file" id="file" name="file">
-      <button type="button" id="uploadButton">Upload</button>
+      <picture class="thumbnail">
+        <img id="thumbnailImage" class="thumbnail__img" src="https://img.icons8.com/pastel-glyph/64/000000/upload--v1.png">
+        <p id="thumbnailText" class="thumbnail__text">Drop a cat image here</p>
+      </picture>
+      <div class="upload-section__buttons">
+        <label for="file" class="button">Select Image</label>
+        <input type="file" id="file" name="file" class="button form__input" accept=".png, .jpg, .jpeg" style="visibility:hidden;">
+        <button type="button" id="uploadButton" class="button form__button">Upload</button>
+      </div>
     </form>
   </section>
 
-  <section id="favoriteCats">
-    <h2>Favorite Cats</h2>
+  <section id="favoriteCats" class="favorite-cats">
+    <h2 class="favorite-cats__title">Favorite Cats</h2>
 
-    <div id="containerImages"></div>
+    <div id="containerImages" class="favorite-cats__container"></div>
   </section>
 
 

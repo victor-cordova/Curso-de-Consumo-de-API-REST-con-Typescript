@@ -12,6 +12,7 @@ export class CatService {
   ){}
 
   delete = async (catId: number): Promise<void>=> {
+    const stringId = catId.toString();
     const requestPath: string = `${this.favoritePath}/${catId}`;
     const res: Response | null = await fetch(requestPath, {
       method: "DELETE",

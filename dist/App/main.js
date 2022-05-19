@@ -1,7 +1,7 @@
 import { CatService } from "./services/cat.service.js";
 import { HandleDom } from "./view/handleDom.js";
 import { HandleEvents } from "./view/handleEvents.js";
-import { LoadCatImage } from "./loadCatImage.js";
+import { LoadCatImage } from "./LoadCatImage.js";
 import { LocalStorage } from "./localStorage.js";
 const API_KEY = "707899fb-0e66-4594-a01a-e6f5879e0d8b";
 const API_URL_FAVORITES = "https://api.thecatapi.com/v1/favourites";

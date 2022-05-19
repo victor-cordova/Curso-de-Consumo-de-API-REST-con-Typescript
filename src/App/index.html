@@ -6,10 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="./styles/button.css">
+  <link rel="stylesheet" href="./styles/favoriteCats.css">
+  <link rel="stylesheet" href="./styles/form.css">
   <link rel="stylesheet" href="./styles/header.css">
   <link rel="stylesheet" href="./styles/picture.css">
   <link rel="stylesheet" href="./styles/randomCats.css">
   <link rel="stylesheet" href="./styles/thumbnail.css">
+  <link rel="stylesheet" href="./styles/upload.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Lobster&family=Source+Code+Pro:ital,wght@0,700;0,800;0,900;1,700&display=swap" rel="stylesheet">
   <title>Cat app</title>
 </head>
 <body>
@@ -18,7 +25,7 @@
   </header>
 
 
-  <span id="errorMessage"></span>
+  <!-- <span id="errorMessage"></span> -->
 
   <section id="randomCats" class="random-cats">
 
@@ -34,21 +41,21 @@
       <button class="picture__favorite-button"></button>
     </picture>
 
-    <button id="updateImagesButton" class="button">Update cat pictures</button>
+    <button id="updateImagesButton" class="button">Change cats</button>
   </section>
 
-  <section id="uploadCat" class="upload-section">
-    <h2 class="upload-section__title">Upload your own Cat to the app.</h2>
+  <section id="uploadCat" class="upload">
+    <h2 class="upload__title">Upload your own Cat</h2>
 
     <form id="uploadForm" class="form">
 
       <picture class="thumbnail">
         <img id="thumbnailImage" class="thumbnail__img" src="https://img.icons8.com/pastel-glyph/64/000000/upload--v1.png">
-        <p id="thumbnailText" class="thumbnail__text">Drop a cat image here</p>
+        <p id="thumbnailText" class="thumbnail__text">Drop a cat image<br>here</p>
       </picture>
-      <div class="upload-section__buttons">
+      <div class="upload__buttons">
         <label for="file" class="button">Select Image</label>
-        <input type="file" id="file" name="file" class="button form__input" accept=".png, .jpg, .jpeg" style="visibility:hidden;">
+        <input type="file" id="file" name="file" class="form__input" accept=".png, .jpg, .jpeg">
         <button type="button" id="uploadButton" class="button form__button">Upload</button>
       </div>
     </form>
@@ -61,7 +68,7 @@
   </section>
 
 
-  <a href="./../../index.html">Go to index</a>
+  <!-- <a href="./../../index.html">Go to index</a> -->
 
   <script>var exports = {};</script>
   <script type="module" src="./../../dist/App/main.js"></script>

@@ -1,0 +1,39 @@
+.favorite-cats {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-direction: column;
+  height: 530px;
+}
+
+.favorite-cats__title {
+  font-size: 3.4rem;
+  color: var(--fourth-color);
+}
+
+.favorite-cats__container {
+  overflow: scroll;
+  height: 440px;
+  width: 230px;
+  padding-top: 10px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+  background-color: var(--third-color);
+}
+
+.favorite-cats__container::-webkit-scrollbar {
+  width: 10px;
+
+}
+
+.favorite-cats__container::-webkit-scrollbar-thumb {
+  background-color: black;
+  border-radius: 30px;
+}
+
+.favorite-cats__container::-webkit-scrollbar-thumb:hover {
+  background-color: red;
+}

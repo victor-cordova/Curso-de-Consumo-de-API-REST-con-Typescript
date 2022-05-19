@@ -42,7 +42,7 @@ export class HandleDom {
 
     button.className = "picture__favorite-button";
     picture.className = "picture";
-    image.className = "picture__img";
+    image.className = "picture__img picture__img--favorite";
 
     picture.append(image, button);
     return {

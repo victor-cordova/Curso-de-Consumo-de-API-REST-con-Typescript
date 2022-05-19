@@ -1,27 +1,28 @@
 .button {
-
   width: 130px;
   height: 40px;
-  color: #fff;
-  border-radius: 5px;
-  padding: 10px 25px;
+  color: var(--black-color);
+  border-radius: 10px;
 
-  font-size: 1.3rem;
-  font-family: 'Lato', sans-serif;
-  font-weight: 500;
+  font-size: 1.4rem;
+  font-family: 'Fredoka One', cursive;
+  font-weight: 700;
 
   background: transparent;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  display: inline-block;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
    box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
    7px 7px 20px 0px rgba(0,0,0,.1),
    4px 4px 5px 0px rgba(0,0,0,.1);
   outline: none;
 
-
-  background: #b621fe;
+  background-color: var(--second-color);
   border: none;
   z-index: 1;
 }
@@ -33,11 +34,11 @@
   top: 0;
   right: 0;
   z-index: -1;
-  background-color: #663dff;
-  border-radius: 5px;
-   box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
-   7px 7px 20px 0px rgba(0,0,0,.1),
-   4px 4px 5px 0px rgba(0,0,0,.1);
+  background-color: var(--fourth-color);
+  border-radius: 10px;
+  box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
+  7px 7px 20px 0px rgba(0,0,0,.1),
+  4px 4px 5px 0px rgba(0,0,0,.1);
   transition: all 0.3s ease;
 }
 .button:hover {

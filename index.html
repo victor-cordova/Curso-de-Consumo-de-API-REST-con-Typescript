@@ -4,19 +4,74 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <link rel="stylesheet" href="./src/App/style.css">
+  <link rel="stylesheet" href="./src/App/styles/button.css"">
+  <link rel="stylesheet" href="./src/App/styles/favoriteCats.css">
+  <link rel="stylesheet" href="./src/App/styles/form.css">
+  <link rel="stylesheet" href="./src/App/styles/header.css">
+  <link rel="stylesheet" href="./src/App/styles/picture.css">
+  <link rel="stylesheet" href="./src/App/styles/randomCats.css">
+  <link rel="stylesheet" href="./src/App/styles/thumbnail.css">
+  <link rel="stylesheet" href="./src/App/styles/upload.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Lobster&family=Source+Code+Pro:ital,wght@0,700;0,800;0,900;1,700&display=swap" rel="stylesheet">
+  <title>Cat app</title>
 </head>
 <body>
-  <h1>Lessons:</h1>
-
-  <ol>
-    <li><a href="./src/lessons/01-lesson/index.html">First lesson</a></li>
-    <li><a href="./src/lessons/02-enpoints-query-parameters/index.html">Endpoint and query parameters</a></li>
-    <li><a href="./src/lessons/testing-fetch/index.html">testing-fetch</a></li>
-  </ol>
-
-  <a href="./src/App/index.html">Go to cat app</a>
+  <header class="header">
+    <h1 class="header__title">Cat app</h1>
+  </header>
 
 
+  <!-- <span id="errorMessage"></span> -->
+
+  <section id="randomCats" class="random-cats">
+
+    <h2 class="random-cats__title">Random cats</h2>
+
+    <picture class="picture">
+      <img class="picture__img">
+      <button class="picture__favorite-button"></button>
+    </picture>
+
+    <picture class="picture">
+      <img class="picture__img">
+      <button class="picture__favorite-button"></button>
+    </picture>
+
+    <button id="updateImagesButton" class="button">Change cats</button>
+  </section>
+
+  <section id="uploadCat" class="upload">
+    <h2 class="upload__title">Upload your own Cat</h2>
+
+    <form id="uploadForm" class="form">
+
+      <picture class="thumbnail">
+        <img id="thumbnailImage" class="thumbnail__img" src="https://img.icons8.com/pastel-glyph/64/000000/upload--v1.png">
+        <p id="thumbnailText" class="thumbnail__text">Drop a cat image<br>here</p>
+      </picture>
+      <div class="upload__buttons">
+        <label for="file" class="button">Select Image</label>
+        <input type="file" id="file" name="file" class="form__input" accept=".png, .jpg, .jpeg">
+        <button type="button" id="uploadButton" class="button form__button">Upload</button>
+      </div>
+    </form>
+  </section>
+
+  <section id="favoriteCats" class="favorite-cats">
+    <h2 class="favorite-cats__title">Favorite Cats</h2>
+
+    <div id="containerImages" class="favorite-cats__container"></div>
+  </section>
+
+
+  <!-- <a href="./../../index.html">Go to index</a> -->
+
+  <script>var exports = {};</script>
+  <script type="module" src="./dist/App/main.js"></script>
 </body>
 </html>
+
